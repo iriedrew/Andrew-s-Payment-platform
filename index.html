@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pay – Andrew's Tech Repair & Sales</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+```
+:root {
+  --bg: #0a0c10;
+  --surface: #12151c;
+  --card: #181c26;
+  --border: rgba(255,255,255,0.07);
+  --accent: #00e5ff;
+  --accent2: #7b5cff;
+  --text: #f0f2f5;
+  --muted: #7a8296;
+  --success: #00e5a0;
+  --warning: #ffb800;
+  --danger: #ff4d6d;
+  --wa: #25d366;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 16px 80px;
+  position: relative;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: -180px; left: -120px;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(0,229,255,0.11) 0%, transparent 70%);
+  pointer-events: none;
+}
+body::after {
+  content: '';
+  position: fixed;
+  bottom: -200px; right: -150px;
+  width: 700px; height: 700px;
+  background: radial-gradient(circle, rgba(123,92,255,0.09) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.container {
+  width: 100%;
+  max-width: 520px;
+  position: relative;
+  z-index: 1;
+}
+
+/* HEADER */
+.header {
+  text-align: center;
+  margin-bottom: 36px;
+  animation: fadeUp 0.6s ease both;
+}
+.logo-icon {
+  display: inline-flex;
+  align-items: center; justify-content: center;
+  width: 68px; height: 68px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, var(--accent2), var(--accent));
+  font-size: 28px;
+  margin-bottom: 16px;
+  box-shadow: 0 0 40px rgba(0,229,255,0.22);
+}
+.business-name {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: clamp(22px, 5vw, 28px);
+  letter-spacing: -0.5px;
+  line-height: 1.1;
+  background: linear-gradient(120deg, #fff 30%, var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.tagline {
+  color: var(--muted);
+  font-size: 14px;
+  margin-top: 6px;
+}
+
+/* AMOUNT BOX */
+.amount-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 24px;
+  margin-bottom: 28px;
+  animation: fadeUp 0.6s 0.1s ease both;
+}
+.field-label {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+.amount-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.currency-tag {
+  font-family: 'Syne', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--accent);
+  background: rgba(0,229,255,0.08);
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(0,229,255,0.2);
+  white-space: nowrap;
+}
+.amount-input {
+  flex: 1;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  font-family: 'Syne', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  padding: 10px 14px;
+  outline: none;
+  transition: border-color 0.2s;
+  width: 100%;
+}
+.amount-input::placeholder { color: var(--muted); font-weight: 400; font-size: 16px; font-family: 'DM Sans', sans-serif; }
+.amount-input:focus { border-color: rgba(0,229,255,0.4); }
+.note-input {
+  width: 100%;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  padding: 10px 14px;
+  margin-top: 12px;
+  outline: none;
+  resize: none;
+  transition: border-color 0.2s;
+}
+.note-input::placeholder { color: var(--muted); }
+.note-input:focus { border-color: rgba(0,229,255,0.4); }
+
+/* SECTION TITLE */
+.section-title {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 14px;
+  padding-left: 4px;
+}
+
+/* PAYMENT METHOD CARDS — clickable, open links directly */
+.methods-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  animation: fadeUp 0.6s 0.2s ease both;
+  margin-bottom: 14px;
+}
+
+.method-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  cursor: pointer;
+  transition: border-color 0.25s, transform 0.18s, box-shadow 0.25s, background 0.2s;
+  user-select: none;
+  text-decoration: none;
+  color: var(--text);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Ripple shimmer on hover */
+.method-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.04) 50%, transparent 70%);
+  transform: translateX(-100%);
+  transition: transform 0.45s ease;
+}
+.method-card:hover::after { transform: translateX(100%); }
+
+.method-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 36px rgba(0,0,0,0.3);
+}
+.method-card:active {
+  transform: translateY(-1px) scale(0.99);
+}
+
+/* Color-specific hover borders */
+.method-card.lynk-card:hover   { border-color: rgba(108,0,255,0.5); box-shadow: 0 10px 36px rgba(108,0,255,0.18); }
+.method-card.bank-card:hover   { border-color: rgba(0,198,255,0.45); box-shadow: 0 10px 36px rgba(0,198,255,0.15); }
+.method-card.paypal-card:hover { border-color: rgba(0,156,222,0.5); box-shadow: 0 10px 36px rgba(0,156,222,0.18); }
+
+.method-icon {
+  width: 52px; height: 52px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center; justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+.icon-lynk   { background: linear-gradient(135deg,#1a1aff,#6c00ff); }
+.icon-bank   { background: linear-gradient(135deg,#007bff,#00c6ff); }
+.icon-paypal { background: linear-gradient(135deg,#003087,#009cde); }
+
+.method-info { flex: 1; }
+.method-name {
+  font-family: 'Syne', sans-serif;
+  font-size: 17px; font-weight: 800;
+  margin-bottom: 3px;
+}
+.method-sub {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* Bank expand panel (bank still needs details shown) */
+.method-arrow {
+  color: var(--muted);
+  font-size: 20px;
+  transition: color 0.2s, transform 0.2s;
+}
+.method-card:hover .method-arrow { color: var(--accent); transform: translateX(4px); }
+.method-card.lynk-card:hover .method-arrow   { color: #a07cff; }
+.method-card.paypal-card:hover .method-arrow { color: #00aaff; }
+
+/* "Tap to pay" pill badge */
+.pay-badge {
+  font-size: 11px;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 100px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.badge-lynk   { background: rgba(108,0,255,0.2); color: #a07cff; border: 1px solid rgba(108,0,255,0.3); }
+.badge-paypal { background: rgba(0,156,222,0.15); color: #00aaff; border: 1px solid rgba(0,156,222,0.3); }
+.badge-bank   { background: rgba(0,229,255,0.08); color: var(--muted); border: 1px solid var(--border); }
+
+/* BANK DETAIL PANEL */
+.detail-panel {
+  display: none;
+  background: rgba(0,198,255,0.04);
+  border: 1px solid rgba(0,198,255,0.12);
+  border-top: none;
+  border-radius: 0 0 14px 14px;
+  padding: 16px;
+  font-size: 14px;
+  margin-top: -4px;
+}
+.detail-panel.open { display: block; animation: fadeUp 0.2s ease both; }
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--border);
+  gap: 10px;
+}
+.detail-row:last-of-type { border-bottom: none; }
+.detail-key { color: var(--muted); font-size: 12px; flex-shrink: 0; min-width: 90px; }
+.detail-val { font-weight: 500; word-break: break-all; font-size: 13px; flex: 1; }
+
+.copy-btn {
+  background: rgba(0,229,255,0.1);
+  border: 1px solid rgba(0,229,255,0.2);
+  color: var(--accent);
+  border-radius: 8px;
+  padding: 4px 10px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.2s;
+  white-space: nowrap;
+  font-family: 'DM Sans', sans-serif;
+}
+.copy-btn:hover { background: rgba(0,229,255,0.2); }
+.copy-btn.copied { color: var(--success); }
+.detail-hint {
+  margin-top: 10px; font-size: 12px;
+  color: var(--muted); line-height: 1.5;
+}
+
+/* SHARE ROW */
+.share-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 24px;
+  animation: fadeUp 0.6s 0.3s ease both;
+}
+.share-btn {
+  flex: 1;
+  display: flex;
+  align-items: center; justify-content: center;
+  gap: 8px;
+  padding: 13px;
+  border-radius: 12px;
+  font-family: 'Syne', sans-serif;
+  font-size: 13px; font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.15s;
+  border: none;
+}
+.share-btn:hover { opacity: 0.85; transform: translateY(-1px); }
+.share-btn:active { transform: translateY(0); }
+.share-btn.primary { background: linear-gradient(135deg, var(--accent2), var(--accent)); color: #000; }
+.share-btn.secondary { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
+
+/* CONTACT BAR (phone at bottom) */
+.contact-bar {
+  margin-top: 28px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  animation: fadeUp 0.6s 0.35s ease both;
+  flex-wrap: wrap;
+}
+.contact-info { flex: 1; }
+.contact-label {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 3px;
+}
+.contact-number {
+  font-family: 'Syne', sans-serif;
+  font-size: 16px; font-weight: 700;
+  color: var(--text);
+  id: disp_lynkPhone;
+}
+.contact-btns { display: flex; gap: 8px; flex-shrink: 0; }
+.contact-btn {
+  display: inline-flex;
+  align-items: center; justify-content: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 10px;
+  font-family: 'Syne', sans-serif;
+  font-size: 12px; font-weight: 700;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.15s;
+  white-space: nowrap;
+}
+.contact-btn:hover { opacity: 0.82; transform: scale(1.03); }
+.contact-btn:active { transform: scale(1); }
+.btn-call { background: linear-gradient(135deg,#00c853,#00e5a0); color: #000; }
+.btn-wa   { background: linear-gradient(135deg,#128c3b,var(--wa)); color: #fff; }
+
+/* EDIT TOGGLE */
+.edit-toggle-wrap {
+  text-align: center;
+  margin-top: 24px;
+  animation: fadeUp 0.6s 0.4s ease both;
+}
+.edit-toggle-btn {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  padding: 9px 22px;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+.edit-toggle-btn:hover { border-color: var(--warning); color: var(--warning); }
+
+/* PASSWORD MODAL */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.72);
+  backdrop-filter: blur(6px);
+  display: none;
+  align-items: center; justify-content: center;
+  z-index: 100; padding: 20px;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 32px 28px;
+  width: 100%; max-width: 360px;
+  animation: fadeUp 0.3s ease both;
+}
+.modal-title { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 800; margin-bottom: 6px; }
+.modal-sub { color: var(--muted); font-size: 13px; margin-bottom: 20px; }
+.modal-input {
+  width: 100%;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px; padding: 12px 14px;
+  outline: none; margin-bottom: 10px;
+  transition: border-color 0.2s;
+  letter-spacing: 0.08em;
+}
+.modal-input:focus { border-color: rgba(0,229,255,0.4); }
+.modal-input.error { border-color: var(--danger); }
+.modal-error { color: var(--danger); font-size: 12px; margin-bottom: 12px; display: none; }
+.modal-btns { display: flex; gap: 10px; margin-top: 4px; }
+.modal-btn {
+  flex: 1; padding: 12px; border-radius: 10px;
+  font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700;
+  cursor: pointer; border: none; transition: opacity 0.2s;
+}
+.modal-btn:hover { opacity: 0.85; }
+.modal-btn.confirm { background: linear-gradient(135deg, var(--accent2), var(--accent)); color: #000; }
+.modal-btn.cancel  { background: var(--surface); color: var(--muted); border: 1px solid var(--border); }
+
+/* EDIT PANEL */
+.edit-panel {
+  display: none;
+  background: var(--surface);
+  border: 1px solid rgba(255,184,0,0.4);
+  border-radius: 20px;
+  padding: 24px;
+  margin-top: 24px;
+}
+.edit-panel.open { display: block; animation: fadeUp 0.3s ease both; }
+.edit-panel-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 22px;
+}
+.edit-panel-title { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 800; color: var(--warning); }
+.edit-close-btn { background: none; border: none; color: var(--muted); font-size: 20px; cursor: pointer; transition: color 0.2s; }
+.edit-close-btn:hover { color: var(--danger); }
+
+.edit-group { margin-bottom: 22px; padding-bottom: 22px; border-bottom: 1px solid var(--border); }
+.edit-group:last-of-type { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.edit-group-title { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; margin-bottom: 14px; }
+
+.edit-field { margin-bottom: 10px; }
+.edit-field:last-child { margin-bottom: 0; }
+.edit-field label { display: block; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 5px; }
+.edit-field input {
+  width: 100%;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px; padding: 9px 12px;
+  outline: none; transition: border-color 0.2s;
+}
+.edit-field input:focus { border-color: rgba(255,184,0,0.45); }
+.edit-field .hint { font-size: 11px; color: var(--muted); margin-top: 4px; line-height: 1.4; }
+
+.save-btn {
+  width: 100%; margin-top: 22px;
+  background: linear-gradient(135deg, #ffb800, #ff7c00);
+  border: none; border-radius: 12px;
+  color: #000; font-family: 'Syne', sans-serif;
+  font-size: 15px; font-weight: 800; padding: 14px;
+  cursor: pointer; transition: opacity 0.2s, transform 0.15s;
+}
+.save-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+.save-btn:active { transform: translateY(0); }
+
+/* FOOTER */
+.footer {
+  text-align: center;
+  margin-top: 28px;
+  color: var(--muted);
+  font-size: 12px;
+  animation: fadeUp 0.6s 0.5s ease both;
+}
+
+/* TOAST */
+.toast {
+  position: fixed;
+  bottom: 32px; left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: var(--success);
+  color: #000;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700; font-size: 14px;
+  padding: 12px 24px; border-radius: 100px;
+  z-index: 999;
+  transition: transform 0.35s cubic-bezier(.34,1.56,.64,1);
+  white-space: nowrap; pointer-events: none;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+```
+
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Header -->
+
+  <div class="header">
+    <div class="logo-icon">🔧</div>
+    <div class="business-name">Andrew's Tech Repair & Sales</div>
+    <div class="tagline">Enter the amount then select a payment method</div>
+  </div>
+
+  <!-- Amount -->
+
+  <div class="amount-box">
+    <div class="field-label">Payment Due</div>
+    <div class="amount-input-wrap">
+      <div class="currency-tag">JMD $</div>
+      <input class="amount-input" type="number" id="amountInput" placeholder="Enter amount" min="0"/>
+    </div>
+    <textarea class="note-input" rows="2" placeholder="Add a note (e.g. iPhone screen repair – Invoice #004)" id="noteInput"></textarea>
+  </div>
+
+  <!-- Payment Methods -->
+
+  <div class="section-title">Select Payment Method</div>
+  <div class="methods-grid">
+
+```
+<!-- Lynk — clicking opens the Lynk link directly -->
+<div class="method-card lynk-card" onclick="openPaymentLink('lynk')">
+  <div class="method-icon icon-lynk">📲</div>
+  <div class="method-info">
+    <div class="method-name">Lynk</div>
+    <div class="method-sub">Tap to pay via Lynk</div>
+  </div>
+  <span class="pay-badge badge-lynk">Pay Now</span>
+  <span class="method-arrow">›</span>
+</div>
+
+<!-- Bank Transfer — expands to show details -->
+<div>
+  <div class="method-card bank-card" onclick="togglePanel('bankPanel')">
+    <div class="method-icon icon-bank">🏦</div>
+    <div class="method-info">
+      <div class="method-name">Bank Transfer</div>
+      <div class="method-sub">Tap to view account details</div>
+    </div>
+    <span class="pay-badge badge-bank">Details</span>
+    <span class="method-arrow" id="bankArrow">›</span>
+  </div>
+  <div class="detail-panel" id="bankPanel">
+    <div class="detail-row">
+      <span class="detail-key">Bank</span>
+      <span class="detail-val" id="disp_bankName">Bank Name</span>
+      <button class="copy-btn" onclick="copyVal('disp_bankName',this)">Copy</button>
+    </div>
+    <div class="detail-row">
+      <span class="detail-key">Account Name</span>
+      <span class="detail-val" id="disp_bankAccName">Andrew's Tech Repair & Sales</span>
+      <button class="copy-btn" onclick="copyVal('disp_bankAccName',this)">Copy</button>
+    </div>
+    <div class="detail-row">
+      <span class="detail-key">Account #</span>
+      <span class="detail-val" id="disp_bankAccNum">XXXXXXXXXX</span>
+      <button class="copy-btn" onclick="copyVal('disp_bankAccNum',this)">Copy</button>
+    </div>
+    <div class="detail-row">
+      <span class="detail-key">Routing #</span>
+      <span class="detail-val" id="disp_bankRouting">XXXXXXXX</span>
+      <button class="copy-btn" onclick="copyVal('disp_bankRouting',this)">Copy</button>
+    </div>
+    <div class="detail-hint">Use your name + invoice number as the transfer reference.</div>
+  </div>
+</div>
+
+<!-- PayPal — clicking opens the PayPal link directly -->
+<div class="method-card paypal-card" onclick="openPaymentLink('paypal')">
+  <div class="method-icon icon-paypal">🅿️</div>
+  <div class="method-info">
+    <div class="method-name">PayPal</div>
+    <div class="method-sub">Tap to pay via PayPal</div>
+  </div>
+  <span class="pay-badge badge-paypal">Pay Now</span>
+  <span class="method-arrow">›</span>
+</div>
+```
+
+  </div>
+
+  <!-- Share -->
+
+  <div class="share-row">
+    <button class="share-btn secondary" onclick="copyPageLink()">🔗 Copy Link</button>
+    <button class="share-btn primary" onclick="shareViaWhatsApp()">💬 Share via WhatsApp</button>
+  </div>
+
+  <!-- Contact bar (phone at bottom) -->
+
+  <div class="contact-bar">
+    <div class="contact-info">
+      <div class="contact-label">Contact Us</div>
+      <div class="contact-number" id="disp_phone">876-XXX-XXXX</div>
+    </div>
+    <div class="contact-btns">
+      <a id="callBtn" href="tel:" class="contact-btn btn-call">📞 Call</a>
+      <a id="waBtn"   href="#"    target="_blank" class="contact-btn btn-wa">💬 WhatsApp</a>
+    </div>
+  </div>
+
+  <!-- Edit toggle -->
+
+  <div class="edit-toggle-wrap">
+    <button class="edit-toggle-btn" onclick="openPasswordModal()">⚙️ Edit Payment Details</button>
+  </div>
+
+  <!-- Edit Panel -->
+
+  <div class="edit-panel" id="editPanel">
+    <div class="edit-panel-header">
+      <div class="edit-panel-title">✏️ Edit Mode</div>
+      <button class="edit-close-btn" onclick="closeEditPanel()">✕</button>
+    </div>
+
+```
+<!-- Lynk -->
+<div class="edit-group">
+  <div class="edit-group-title">📲 Lynk</div>
+  <div class="edit-field">
+    <label>Lynk Payment Link</label>
+    <input type="url" id="edit_lynkLink" placeholder="https://lynk.com/pay/yourhandle"/>
+    <div class="hint">Customers will be taken directly here when they tap the Lynk button.</div>
+  </div>
+</div>
+
+<!-- Bank -->
+<div class="edit-group">
+  <div class="edit-group-title">🏦 Bank Transfer</div>
+  <div class="edit-field">
+    <label>Bank Name</label>
+    <input type="text" id="edit_bankName" placeholder="e.g. NCB, Scotiabank, JN Bank"/>
+  </div>
+  <div class="edit-field">
+    <label>Account Name</label>
+    <input type="text" id="edit_bankAccName" placeholder="Account holder name"/>
+  </div>
+  <div class="edit-field">
+    <label>Account Number</label>
+    <input type="text" id="edit_bankAccNum" placeholder="Your account number"/>
+  </div>
+  <div class="edit-field">
+    <label>Routing / Transit Number</label>
+    <input type="text" id="edit_bankRouting" placeholder="Your routing number"/>
+  </div>
+</div>
+
+<!-- PayPal -->
+<div class="edit-group">
+  <div class="edit-group-title">🅿️ PayPal</div>
+  <div class="edit-field">
+    <label>PayPal Payment Link</label>
+    <input type="url" id="edit_paypalLink" placeholder="https://paypal.me/yourname"/>
+    <div class="hint">Customers will be taken directly here when they tap the PayPal button.</div>
+  </div>
+</div>
+
+<!-- Contact / Phone -->
+<div class="edit-group">
+  <div class="edit-group-title">📞 Contact Details</div>
+  <div class="edit-field">
+    <label>Phone Number (display)</label>
+    <input type="text" id="edit_phoneDisplay" placeholder="e.g. 876-XXX-XXXX"/>
+  </div>
+  <div class="edit-field">
+    <label>Phone Number (digits only, for calling)</label>
+    <input type="tel" id="edit_phoneDigits" placeholder="e.g. 8761234567"/>
+    <div class="hint">Used for the Call button. No spaces or dashes.</div>
+  </div>
+  <div class="edit-field">
+    <label>WhatsApp Number (with country code)</label>
+    <input type="tel" id="edit_waNumber" placeholder="e.g. 18761234567"/>
+    <div class="hint">Used for the WhatsApp button and Share. Include country code (1 for Jamaica).</div>
+  </div>
+</div>
+
+<!-- Password -->
+<div class="edit-group">
+  <div class="edit-group-title">🔒 Change Password</div>
+  <div class="edit-field">
+    <label>New Password (leave blank to keep current)</label>
+    <input type="password" id="edit_newPassword" placeholder="Min. 4 characters"/>
+  </div>
+</div>
+
+<button class="save-btn" onclick="saveChanges()">💾 Save All Changes</button>
+```
+
+  </div>
+
+  <div class="footer">
+    Andrew's Tech Repair & Sales &nbsp;·&nbsp; All transactions are secure
+  </div>
+</div>
+
+<!-- Password Modal -->
+
+<div class="modal-overlay" id="passwordModal">
+  <div class="modal">
+    <div class="modal-title">🔐 Owner Access</div>
+    <div class="modal-sub">Enter your password to edit payment details.</div>
+    <input class="modal-input" type="password" id="passwordInput" placeholder="Enter password"
+      onkeydown="if(event.key==='Enter') verifyPassword()"/>
+    <div class="modal-error" id="passwordError">Incorrect password. Please try again.</div>
+    <div class="modal-btns">
+      <button class="modal-btn cancel" onclick="closePasswordModal()">Cancel</button>
+      <button class="modal-btn confirm" onclick="verifyPassword()">Unlock ›</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  // ─── Password ─────────────────────────────────────────────────────
+  const PASS_KEY = 'atr_pass';
+  const getPass  = () => localStorage.getItem(PASS_KEY) || 'admin1234';
+
+  // ─── Field map ────────────────────────────────────────────────────
+  const FIELDS = [
+    { key: 'lynkLink',      disp: null,               edit: 'edit_lynkLink',      def: '' },
+    { key: 'bankName',      disp: 'disp_bankName',    edit: 'edit_bankName',      def: 'Bank Name' },
+    { key: 'bankAccName',   disp: 'disp_bankAccName', edit: 'edit_bankAccName',   def: "Andrew's Tech Repair & Sales" },
+    { key: 'bankAccNum',    disp: 'disp_bankAccNum',  edit: 'edit_bankAccNum',    def: 'XXXXXXXXXX' },
+    { key: 'bankRouting',   disp: 'disp_bankRouting', edit: 'edit_bankRouting',   def: 'XXXXXXXX' },
+    { key: 'paypalLink',    disp: null,               edit: 'edit_paypalLink',    def: '' },
+    { key: 'phoneDisplay',  disp: 'disp_phone',       edit: 'edit_phoneDisplay',  def: '876-XXX-XXXX' },
+    { key: 'phoneDigits',   disp: null,               edit: 'edit_phoneDigits',   def: '' },
+    { key: 'waNumber',      disp: null,               edit: 'edit_waNumber',      def: '' },
+  ];
+
+  function getSaved(key) {
+    const f = FIELDS.find(f => f.key === key);
+    return localStorage.getItem('atr_' + key) || (f ? f.def : '');
+  }
+
+  // ─── Load data & update buttons ───────────────────────────────────
+  function loadData() {
+    FIELDS.forEach(f => {
+      const val = localStorage.getItem('atr_' + f.key) || f.def;
+      if (f.disp) document.getElementById(f.disp).textContent = val;
+    });
+    refreshContactButtons();
+  }
+
+  function refreshContactButtons() {
+    const digits = getSaved('phoneDigits').replace(/\D/g,'');
+    const wa     = getSaved('waNumber').replace(/\D/g,'');
+    document.getElementById('callBtn').href = digits ? 'tel:+' + digits : 'tel:';
+    document.getElementById('waBtn').href   = wa ? 'https://wa.me/' + wa : '#';
+  }
+
+  loadData();
+
+  // ─── Open Lynk / PayPal link directly ────────────────────────────
+  function openPaymentLink(type) {
+    const key  = type === 'lynk' ? 'lynkLink' : 'paypalLink';
+    const link = getSaved(key);
+    if (!link || link.trim() === '') {
+      showToast('⚠️ No link set yet — tap Edit Payment Details');
+      return;
+    }
+    window.open(link, '_blank');
+  }
+
+  // ─── Toggle bank panel ────────────────────────────────────────────
+  function togglePanel(id) {
+    const panel  = document.getElementById(id);
+    const isOpen = panel.classList.contains('open');
+    document.querySelectorAll('.detail-panel').forEach(p => p.classList.remove('open'));
+    const arrow = document.getElementById('bankArrow');
+    if (!isOpen) {
+      panel.classList.add('open');
+      if (arrow) arrow.style.transform = 'rotate(90deg)';
+    } else {
+      if (arrow) arrow.style.transform = '';
+    }
+  }
+
+  // ─── Copy ─────────────────────────────────────────────────────────
+  function copyVal(id, btn) {
+    const text = document.getElementById(id).textContent.trim();
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = '✓ Done';
+      btn.classList.add('copied');
+      showToast('Copied: ' + text);
+      setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+    });
+  }
+
+  // ─── Toast ────────────────────────────────────────────────────────
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2600);
+  }
+
+  // ─── Password modal ───────────────────────────────────────────────
+  function openPasswordModal() {
+    const pi = document.getElementById('passwordInput');
+    pi.value = ''; pi.classList.remove('error');
+    document.getElementById('passwordError').style.display = 'none';
+    document.getElementById('passwordModal').classList.add('open');
+    setTimeout(() => pi.focus(), 120);
+  }
+  function closePasswordModal() {
+    document.getElementById('passwordModal').classList.remove('open');
+  }
+  function verifyPassword() {
+    const val = document.getElementById('passwordInput').value;
+    if (val === getPass()) {
+      closePasswordModal();
+      prefillEditInputs();
+      const ep = document.getElementById('editPanel');
+      ep.classList.add('open');
+      setTimeout(() => ep.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+    } else {
+      const pi = document.getElementById('passwordInput');
+      document.getElementById('passwordError').style.display = 'block';
+      pi.classList.add('error');
+      pi.value = ''; pi.focus();
+    }
+  }
+
+  // ─── Edit panel ───────────────────────────────────────────────────
+  function prefillEditInputs() {
+    FIELDS.forEach(f => {
+      const el = document.getElementById(f.edit);
+      if (el) el.value = localStorage.getItem('atr_' + f.key) || '';
+    });
+    document.getElementById('edit_newPassword').value = '';
+  }
+
+  function closeEditPanel() {
+    document.getElementById('editPanel').classList.remove('open');
+  }
+
+  function saveChanges() {
+    FIELDS.forEach(f => {
+      const el = document.getElementById(f.edit);
+      if (!el) return;
+      const val = el.value.trim();
+      if (val) {
+        localStorage.setItem('atr_' + f.key, val);
+        if (f.disp) document.getElementById(f.disp).textContent = val;
+      }
+    });
+
+    const newPass = document.getElementById('edit_newPassword').value.trim();
+    if (newPass.length > 0 && newPass.length < 4) {
+      showToast('⚠️ Password must be at least 4 characters'); return;
+    }
+    if (newPass.length >= 4) localStorage.setItem(PASS_KEY, newPass);
+
+    refreshContactButtons();
+    showToast('✅ Changes saved successfully!');
+    setTimeout(() => closeEditPanel(), 1400);
+  }
+
+  // ─── Share ────────────────────────────────────────────────────────
+  function copyPageLink() {
+    navigator.clipboard.writeText(window.location.href)
+      .then(() => showToast('🔗 Link copied to clipboard!'));
+  }
+
+  function shareViaWhatsApp() {
+    const amount = document.getElementById('amountInput').value;
+    const note   = document.getElementById('noteInput').value.trim();
+    const url    = window.location.href;
+    const waNum  = getSaved('waNumber').replace(/\D/g,'');
+    let msg = `Hi! Here are the payment details for *Andrew's Tech Repair & Sales*.\n`;
+    if (amount) msg += `\n💰 *Amount:* JMD $${parseFloat(amount).toLocaleString()}\n`;
+    if (note)   msg += `📝 *Note:* ${note}\n`;
+    msg += `\n👇 Choose your preferred payment method:\n${url}`;
+    const base = waNum ? `https://wa.me/${waNum}` : 'https://wa.me/';
+    window.open(base + '?text=' + encodeURIComponent(msg), '_blank');
+  }
+</script>
+
+</body>
+</html>
